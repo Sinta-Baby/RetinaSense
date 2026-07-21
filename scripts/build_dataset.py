@@ -21,8 +21,8 @@ from utils.file_utils import create_directory
 from datasets.processors.odir_processor import process_odir
 from datasets.processors.odir_processor import process_odir
 from datasets.processors.aptos_processor import process_aptos
-#from datasets.processors.glaucoma_processor import process_glaucoma
-#from datasets.processors.armd_processor import process_armd
+from datasets.processors.glaucoma_processor import process_glaucoma
+from datasets.processors.armd_processor import process_armd
 
 # =====================================================
 # Disease Classes
@@ -130,18 +130,18 @@ def build_dataset():
     # -----------------------------
     # Glaucoma
     # -----------------------------
-    #glaucoma_metadata = process_glaucoma()
+    glaucoma_metadata = process_glaucoma()
 
-    #if glaucoma_metadata:
-        #master_metadata.extend(glaucoma_metadata)
+    if glaucoma_metadata:
+        master_metadata.extend(glaucoma_metadata)
 
     # -----------------------------
     # ARMD
     # -----------------------------
-    #armd_metadata = process_armd()
+    armd_metadata = process_armd()
 
-    #if armd_metadata:
-        #master_metadata.extend(armd_metadata)
+    if armd_metadata:
+        master_metadata.extend(armd_metadata)
 
     save_metadata()
 

@@ -90,7 +90,13 @@ def split_dataset(metadata):
     print(f"Validation Records : {len(validation_df)}")
     print(f"Test Records       : {len(test_df)}")
 
-    
+    total = len(metadata)
+
+    print("\nSplit Ratio")
+    print("-" * 30)
+    print(f"Train      : {len(train_df)/total:.1%}")
+    print(f"Validation : {len(validation_df)/total:.1%}")
+    print(f"Test       : {len(test_df)/total:.1%}")
     train_df = train_df.reset_index(drop=True)
 
     validation_df = validation_df.reset_index(drop=True)
@@ -100,6 +106,37 @@ def split_dataset(metadata):
     logger.info("Dataset split completed successfully.")
 
     return train_df, validation_df, test_df
+
+
+# =====================================================
+# Display Dataset Distribution
+# =====================================================
+
+def display_distribution(train_df, validation_df, test_df):
+
+    print("\n" + "=" * 70)
+    print("Dataset Distribution")
+    print("=" * 70)
+
+    datasets = {
+        "Train": train_df,
+        "Validation": validation_df,
+        "Test": test_df
+    }
+
+    for name, df in datasets.items():
+
+        print(f"\n{name}")
+
+        print("-" * 30)
+
+        distribution = df["disease"].value_counts().sort_index()
+
+        for disease, count in distribution.items():
+
+            print(f"{disease:<12}: {count}")
+
+        print(f"\nTotal : {len(df)}")
 
 
 # =====================================================
@@ -144,10 +181,15 @@ def main():
 
     train_df, validation_df, test_df = split_dataset(metadata)
 
+    display_distribution(
+    train_df,
+    validation_df,
+    test_df
+    )
     save_split_metadata(
-        train_df,
-        validation_df,
-        test_df
+    train_df,
+    validation_df,
+    test_df
     )
 
     print("\n" + "=" * 70)

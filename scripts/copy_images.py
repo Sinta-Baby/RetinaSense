@@ -10,15 +10,15 @@ using the split metadata files.
 
 ==========================================================
 """
-import shutil
 
+import shutil
 import pandas as pd
 
 from pathlib import Path
 
 from core.paths import *
-
 from core.logger import logger
+
 
 # =====================================================
 # Disease Classes
@@ -48,7 +48,12 @@ def create_dataset_structure():
         TEST_DATASET
     ]
 
+    # Remove only train/validation/test folders
+    # Metadata folder remains untouched
     for dataset in datasets:
+
+        if dataset.exists():
+            shutil.rmtree(dataset)
 
         dataset.mkdir(parents=True, exist_ok=True)
 
@@ -60,7 +65,7 @@ def create_dataset_structure():
             )
 
     logger.info("Dataset folder structure created successfully.")
-    
+
 
 # =====================================================
 # Load Metadata
@@ -80,6 +85,7 @@ def load_metadata(metadata_path):
 
     return metadata
 
+
 # =====================================================
 # Copy Images
 # =====================================================
@@ -93,29 +99,55 @@ def copy_images(metadata, destination_folder):
     copied = 0
     skipped = 0
 
-    for _, row in metadata.iterrows():
+    # row_index is unique for every metadata row
+    for row_index, row in metadata.iterrows():
 
         source = Path(row["filepath"])
 
         disease = row["disease"]
 
-        destination = destination_folder / disease / row["filename"]
+        dataset = row["dataset"]
 
         if source.exists():
 
-            shutil.copy2(source, destination)
+            # Unique filename
+            new_filename = (
+                f"{dataset}_{disease}_{row_index}_{source.name}"
+            )
+
+            destination = (
+                destination_folder
+                / disease
+                / new_filename
+            )
+
+            shutil.copy2(
+                source,
+                destination
+            )
 
             copied += 1
 
+            if copied % 1000 == 0:
+                print(f"Copied {copied} images...")
+
         else:
+
+            print(f"Missing : {source}")
 
             skipped += 1
 
+    print("\nSummary")
+    print("-" * 30)
     print(f"Copied Images : {copied}")
     print(f"Skipped Images: {skipped}")
 
-    logger.info(f"{destination_folder.name}: {copied} images copied.")
-    
+    logger.info(
+        f"{destination_folder.name}: "
+        f"{copied} images copied, "
+        f"{skipped} skipped."
+    )
+
 
 # =====================================================
 # Main
@@ -125,17 +157,53 @@ def main():
 
     create_dataset_structure()
 
+    # -----------------------------
     # Train
-    train_metadata = load_metadata(TRAIN_METADATA)
-    copy_images(train_metadata, TRAIN_DATASET)
+    # -----------------------------
+    train_metadata = load_metadata(
+        TRAIN_METADATA
+    )
 
+    copy_images(
+        train_metadata,
+        TRAIN_DATASET
+    )
+
+    # -----------------------------
     # Validation
-    validation_metadata = load_metadata(VALIDATION_METADATA)
-    copy_images(validation_metadata, VALIDATION_DATASET)
+    # -----------------------------
+    validation_metadata = load_metadata(
+        VALIDATION_METADATA
+    )
 
+    copy_images(
+        validation_metadata,
+        VALIDATION_DATASET
+    )
+
+    # -----------------------------
     # Test
-    test_metadata = load_metadata(TEST_METADATA)
-    copy_images(test_metadata, TEST_DATASET)
+    # -----------------------------
+    test_metadata = load_metadata(
+        TEST_METADATA
+    )
+
+    copy_images(
+        test_metadata,
+        TEST_DATASET
+    )
+
+    print("\n" + "=" * 70)
+    print("Copy Summary")
+    print("=" * 70)
+
+    print(f"Train Images      : {len(train_metadata)}")
+    print(f"Validation Images : {len(validation_metadata)}")
+    print(f"Test Images       : {len(test_metadata)}")
+    print(
+        f"Total Images      : "
+        f"{len(train_metadata) + len(validation_metadata) + len(test_metadata)}"
+    )
 
     print("\n" + "=" * 70)
     print("Image Copy Completed")
@@ -143,10 +211,11 @@ def main():
 
     logger.info("All images copied successfully.")
 
+
 # =====================================================
 # Run
 # =====================================================
 
 if __name__ == "__main__":
 
-    main() 
+    main()

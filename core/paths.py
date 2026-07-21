@@ -111,3 +111,34 @@ APTOS_TRAIN_IMAGES = APTOS_DATASET / "train_images" / "train_images"
 APTOS_VALID_IMAGES = APTOS_DATASET / "val_images" / "val_images"
 
 APTOS_TEST_IMAGES = APTOS_DATASET / "test_images" / "test_images"
+
+
+# =====================================================
+# GLAUCOMA Dataset
+# =====================================================
+
+GLAUCOMA_DATASET = EXTRACTED_DATASET / "GLAUCOMA"
+
+GLAUCOMA_IMAGES = (
+    GLAUCOMA_DATASET
+    / "Fundus_Train_Val_Data"
+    / "Fundus_Scanes_Sorted"
+)
+
+GLAUCOMA_TRAIN = GLAUCOMA_IMAGES / "Train"
+GLAUCOMA_VALIDATION = GLAUCOMA_IMAGES / "Validation"
+
+
+# =====================================================
+# ARMD Dataset
+# =====================================================
+
+ARMD_DATASET = (
+    EXTRACTED_DATASET
+    / "ARMD"
+    / "Macular Degeneration Disease Dataset"
+)
+
+ARMD_TRAIN = ARMD_DATASET / "train"
+
+ARMD_VALIDATION = ARMD_DATASET / "val"
