@@ -117,7 +117,71 @@ RetinaSense/
 - ⏳ Deployment
 
 ---
+## Installation
 
+Clone the repository
+
+```bash
+git clone https://github.com/Sinta-Baby/RetinaSense.git
+cd RetinaSense
+```
+
+Create a virtual environment
+
+```bash
+python -m venv renv
+```
+
+Windows
+
+```bash
+renv\Scripts\activate
+```
+
+Linux / macOS
+
+```bash
+source renv/bin/activate
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Dataset Setup
+
+Download the required retinal datasets and place them in:
+
+```
+datasets/raw/
+```
+
+Then run:
+
+```bash
+python -m scripts.build_dataset
+python -m scripts.split_dataset
+python -m scripts.copy_images
+```
+
+The final dataset will contain:
+
+| Split | Images |
+|------|-------:|
+| Train | 8971 |
+| Validation | 1121 |
+| Test | 1122 |
+| Total | 11214 |
+
+Verify the dataset:
+
+```bash
+python -m scripts.dataset_statistics
+```
 ## 👩‍💻 Developer
 
 **Sinta Baby**
