@@ -42,7 +42,7 @@ DISEASE_LABELS = [
     "Glaucoma",
     "AMD"
 ]
-
+NUM_CLASSES = len(DISEASE_LABELS)
 # Disease to Index Mapping
 
 DISEASE_TO_INDEX = {
@@ -77,9 +77,29 @@ DR_SEVERITY = {
 # Image Settings
 # ====================================================
 
-IMAGE_SIZE = (224, 224)
+IMAGE_SIZE = (300, 300)
 
 IMAGE_CHANNELS = 3
+
+
+
+
+# ====================================================
+# ImageNet Normalization
+# ====================================================
+
+IMAGENET_MEAN = (
+    0.485,
+    0.456,
+    0.406
+)
+
+IMAGENET_STD = (
+    0.229,
+    0.224,
+    0.225
+)
+
 
 # ====================================================
 # Training Settings
