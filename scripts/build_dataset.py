@@ -13,16 +13,19 @@ Builds the unified RetinaSense dataset.
 
 import pandas as pd
 
+
+import sys
+sys.path.insert(0, ".")
+
 from core.paths import *
 from core.logger import logger
 
 from utils.file_utils import create_directory
 
-from datasets.processors.odir_processor import process_odir
-from datasets.processors.odir_processor import process_odir
-from datasets.processors.aptos_processor import process_aptos
-from datasets.processors.glaucoma_processor import process_glaucoma
-from datasets.processors.armd_processor import process_armd
+from processors.odir_processor import process_odir
+from processors.aptos_processor import process_aptos
+from processors.glaucoma_processor import process_glaucoma
+from processors.armd_processor import process_armd
 
 # =====================================================
 # Disease Classes
