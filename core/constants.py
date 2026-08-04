@@ -42,8 +42,12 @@ DISEASE_LABELS = [
     "Glaucoma",
     "AMD"
 ]
+
 NUM_CLASSES = len(DISEASE_LABELS)
-# Disease to Index Mapping
+
+# ====================================================
+# Disease Mapping
+# ====================================================
 
 DISEASE_TO_INDEX = {
     "Healthy": 0,
@@ -51,8 +55,6 @@ DISEASE_TO_INDEX = {
     "Glaucoma": 2,
     "AMD": 3
 }
-
-# Index to Disease Mapping
 
 INDEX_TO_DISEASE = {
     0: "Healthy",
@@ -81,9 +83,6 @@ IMAGE_SIZE = (300, 300)
 
 IMAGE_CHANNELS = 3
 
-
-
-
 # ====================================================
 # ImageNet Normalization
 # ====================================================
@@ -100,16 +99,31 @@ IMAGENET_STD = (
     0.225
 )
 
-
 # ====================================================
 # Training Settings
 # ====================================================
 
 BATCH_SIZE = 32
 
+NUM_EPOCHS = 30
+
+LEARNING_RATE = 1e-4
+
+WEIGHT_DECAY = 1e-4
+
+EARLY_STOPPING_PATIENCE = 5
+
 RANDOM_SEED = 42
 
 NUM_WORKERS = 2
+
+# ====================================================
+# Model Settings
+# ====================================================
+
+MODEL_NAME = "efficientnet_b3"
+
+BEST_MODEL_NAME = "best_model.pth"
 
 # ====================================================
 # Supported File Extensions
@@ -132,7 +146,7 @@ EXCEL_EXTENSIONS = [
 ]
 
 # ====================================================
-# Confidence Threshold
+# Prediction Settings
 # ====================================================
 
 CONFIDENCE_THRESHOLD = 0.50
