@@ -103,9 +103,12 @@ class Trainer:
     def save_checkpoint(
         self,
         epoch,
-        validation_accuracy
+        best_accuracy
     ):
-
+        SAVED_MODELS.mkdir(
+            parents=True,
+            exist_ok=True
+        )
         checkpoint = {
 
             "epoch": epoch,
@@ -120,13 +123,15 @@ class Trainer:
                 self.scheduler.state_dict(),
 
             "best_accuracy":
-                validation_accuracy
-
+                best_accuracy,
+            
+            "history":
+                self.history
         }
 
         torch.save(
             checkpoint,
-            SAVED_MODELS / BEST_MODEL_NAME
+            SAVED_MODELS / "latest_checkpoint.pth"
         )
 
     # =====================================================
@@ -137,7 +142,7 @@ class Trainer:
 
         checkpoint_path = (
             SAVED_MODELS /
-            BEST_MODEL_NAME
+            "latest_checkpoint.pth"
         )
 
         if checkpoint_path.exists():
@@ -162,11 +167,25 @@ class Trainer:
             self.current_epoch = checkpoint["epoch"]
 
             self.best_accuracy = checkpoint["best_accuracy"]
+            
+            self.history = checkpoint.get(
+                "history",
+                self.history
+            )
+
+            print("=" * 70)
+            print("Checkpoint Loaded")
+            print("=" * 70)
 
             print(
-                f"Checkpoint loaded "
-                f"(Epoch {self.current_epoch})"
+                f"Resuming from Epoch {self.current_epoch + 1}"
             )
+
+            print(
+                f"Best Accuracy : {self.best_accuracy:.2f}%"
+            )
+
+            print("=" * 70)
 
         else:
 
@@ -313,6 +332,11 @@ class Trainer:
     # =====================================================
 
     def save_history(self):
+        
+        TRAINING_HISTORY.mkdir(
+            parents=True,
+            exist_ok=True
+        )
 
         history = pd.DataFrame(
             self.history
@@ -412,6 +436,8 @@ class Trainer:
                 f"{self.optimizer.param_groups[0]['lr']:.7f}"
             )
 
+            
+
             # ------------------------------------------
             # Save Best Model
             # ------------------------------------------
@@ -420,9 +446,9 @@ class Trainer:
 
                 self.best_accuracy = validation_accuracy
 
-                self.save_checkpoint(
-                    epoch + 1,
-                    validation_accuracy
+                torch.save(
+                    self.model.state_dict(),
+                    SAVED_MODELS / BEST_MODEL_NAME
                 )
 
                 self.early_stopping_counter = 0
@@ -451,9 +477,17 @@ class Trainer:
                     )
 
                     break
-
             # ------------------------------------------
-            # Save History
+            # Save Latest Checkpoint (Every Epoch)
+            # ------------------------------------------
+            
+            self.save_checkpoint(
+                    epoch + 1,
+                    self.best_accuracy
+                 
+            )
+            # ------------------------------------------
+            # Save Training History
             # ------------------------------------------
 
             self.save_history()
@@ -468,7 +502,7 @@ class Trainer:
         )
 
         print("=" * 70)
-        
+
         from utils.visualization import plot_training_history
 
         plot_training_history(
