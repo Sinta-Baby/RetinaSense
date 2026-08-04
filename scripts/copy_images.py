@@ -90,7 +90,11 @@ def load_metadata(metadata_path):
 # Copy Images
 # =====================================================
 
-def copy_images(metadata, destination_folder):
+def copy_images(
+    metadata,
+    destination_folder,
+    metadata_path
+):
 
     print("\n" + "=" * 70)
     print(f"Copying Images to {destination_folder.name}")
@@ -99,7 +103,6 @@ def copy_images(metadata, destination_folder):
     copied = 0
     skipped = 0
 
-    # row_index is unique for every metadata row
     for row_index, row in metadata.iterrows():
 
         source = Path(row["filepath"])
@@ -110,10 +113,13 @@ def copy_images(metadata, destination_folder):
 
         if source.exists():
 
-            # Unique filename
+            # Create unique filename
             new_filename = (
                 f"{dataset}_{disease}_{row_index}_{source.name}"
             )
+
+            # Update metadata
+            metadata.at[row_index, "filename"] = new_filename
 
             destination = (
                 destination_folder
@@ -136,6 +142,12 @@ def copy_images(metadata, destination_folder):
             print(f"Missing : {source}")
 
             skipped += 1
+
+    # Save updated metadata
+    metadata.to_csv(
+        metadata_path,
+        index=False
+    )
 
     print("\nSummary")
     print("-" * 30)
@@ -166,7 +178,8 @@ def main():
 
     copy_images(
         train_metadata,
-        TRAIN_DATASET
+        TRAIN_DATASET,
+        TRAIN_METADATA
     )
 
     # -----------------------------
@@ -178,7 +191,8 @@ def main():
 
     copy_images(
         validation_metadata,
-        VALIDATION_DATASET
+        VALIDATION_DATASET,
+        VALIDATION_METADATA
     )
 
     # -----------------------------
@@ -190,7 +204,8 @@ def main():
 
     copy_images(
         test_metadata,
-        TEST_DATASET
+        TEST_DATASET,
+        TEST_METADATA
     )
 
     print("\n" + "=" * 70)
