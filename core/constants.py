@@ -105,7 +105,7 @@ IMAGENET_STD = (
 
 BATCH_SIZE = 32
 
-NUM_EPOCHS = 2
+NUM_EPOCHS = 30
 
 LEARNING_RATE = 1e-4
 
@@ -115,7 +115,7 @@ EARLY_STOPPING_PATIENCE = 5
 
 RANDOM_SEED = 42
 
-NUM_WORKERS = 4
+NUM_WORKERS = 2
 
 # ====================================================
 # Model Settings
