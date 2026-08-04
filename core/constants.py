@@ -115,7 +115,7 @@ EARLY_STOPPING_PATIENCE = 5
 
 RANDOM_SEED = 42
 
-NUM_WORKERS = 2
+NUM_WORKERS = 4
 
 # ====================================================
 # Model Settings
